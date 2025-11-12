@@ -1,7 +1,7 @@
 package com.linktic.products_service.web.handler;
 
 import com.linktic.products_service.web.controller.ProductController;
-import com.linktic.products_service.web.dto.jsonapi.JsonApiError;
+import com.linktic.products_service.web.dto.jsonapi.JsonApiErrorResponse;
 import com.linktic.products_service.web.dto.jsonapi.JsonApiRequest;
 import com.linktic.products_service.web.dto.jsonapi.ProductDto;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,16 +25,30 @@ class RestExceptionHandlerTest {
     private final RestExceptionHandler handler = new RestExceptionHandler();
 
     @Test
-    void handleNotFound_returns404() {
+    void handleNotFound_returns404_withJsonApiEnvelope() {
         ResponseEntity<?> resp = handler.handleNotFound(new NoSuchElementException("missing"));
         assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat((List<?>) resp.getBody()).isNotEmpty();
+        assertThat(resp.getHeaders().getFirst("Content-Type")).isEqualTo("application/vnd.api+json");
+
+        JsonApiErrorResponse body = (JsonApiErrorResponse) resp.getBody();
+        assertThat(body).isNotNull();
+        assertThat(body.getErrors()).isNotEmpty();
+        assertThat(body.getErrors().get(0).getStatus()).isEqualTo("404");
+        assertThat(body.getErrors().get(0).getTitle()).isEqualTo("Not Found");
+        assertThat(body.getErrors().get(0).getDetail()).isEqualTo("missing");
     }
 
     @Test
-    void handleBadRequest_returns400() {
+    void handleBadRequest_returns400_withJsonApiEnvelope() {
         ResponseEntity<?> resp = handler.handleBadRequest(new IllegalArgumentException("bad"));
         assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(resp.getHeaders().getFirst("Content-Type")).isEqualTo("application/vnd.api+json");
+
+        JsonApiErrorResponse body = (JsonApiErrorResponse) resp.getBody();
+        assertThat(body).isNotNull();
+        assertThat(body.getErrors().get(0).getStatus()).isEqualTo("400");
+        assertThat(body.getErrors().get(0).getTitle()).isEqualTo("Bad Request");
+        assertThat(body.getErrors().get(0).getDetail()).isEqualTo("bad");
     }
 
     @Test
@@ -54,13 +67,13 @@ class RestExceptionHandlerTest {
                 ex, new HttpHeaders(), HttpStatus.BAD_REQUEST, new ServletWebRequest(new MockHttpServletRequest()));
 
         assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        List<?> list = (List<?>) resp.getBody();
-        assertThat(list).isNotEmpty();
-        Object first = list.get(0);
-        assertThat(first).isInstanceOf(JsonApiError.class);
-        JsonApiError err = (JsonApiError) first;
-        assertThat(err.getStatus()).isEqualTo("400");
-        assertThat(err.getTitle()).isEqualTo("Validation Error");
-        assertThat(err.getDetail()).contains("name").contains("must not be blank");
+        assertThat(resp.getHeaders().getFirst("Content-Type")).isEqualTo("application/vnd.api+json");
+
+        JsonApiErrorResponse body = (JsonApiErrorResponse) resp.getBody();
+        assertThat(body).isNotNull();
+        assertThat(body.getErrors()).isNotEmpty();
+        assertThat(body.getErrors().get(0).getStatus()).isEqualTo("400");
+        assertThat(body.getErrors().get(0).getTitle()).isEqualTo("Validation Error");
+        assertThat(body.getErrors().get(0).getDetail()).contains("name").contains("must not be blank");
     }
 }

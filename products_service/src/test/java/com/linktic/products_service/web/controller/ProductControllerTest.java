@@ -95,9 +95,9 @@ class ProductControllerTest {
                         .contentType("application/vnd.api+json")
                         .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$[0].status").value("400"))
-                .andExpect(jsonPath("$[0].title").value("Bad Request"))
-                .andExpect(jsonPath("$[0].detail").value("price must be > 0"));
+                .andExpect(jsonPath("$.errors[0].status").value("400"))
+                .andExpect(jsonPath("$.errors[0].title").value("Bad Request"))
+                .andExpect(jsonPath("$.errors[0].detail").value("price must be > 0"));
     }
 
     // -------------------------
@@ -123,9 +123,9 @@ class ProductControllerTest {
         mockMvc.perform(get("/products/1")
                         .header(API_KEY_HEADER, "valid-key"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$[0].status").value("404"))
-                .andExpect(jsonPath("$[0].title").value("Not Found"))
-                .andExpect(jsonPath("$[0].detail").value("Product not found."));
+                .andExpect(jsonPath("$.errors[0].status").value("404"))
+                .andExpect(jsonPath("$.errors[0].title").value("Not Found"))
+                .andExpect(jsonPath("$.errors[0].detail").value("Product not found."));
     }
 
     // -------------------------
@@ -164,7 +164,7 @@ class ProductControllerTest {
                         .contentType("application/vnd.api+json")
                         .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$[0].status").value("404"));
+                .andExpect(jsonPath("$.errors[0].status").value("404"));
     }
 
     @Test
@@ -181,8 +181,8 @@ class ProductControllerTest {
                         .contentType("application/vnd.api+json")
                         .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$[0].status").value("400"))
-                .andExpect(jsonPath("$[0].detail").value("Price must be > 0"));
+                .andExpect(jsonPath("$.errors[0].status").value("400"))
+                .andExpect(jsonPath("$.errors[0].detail").value("Price must be > 0"));
     }
 
     // -------------------------

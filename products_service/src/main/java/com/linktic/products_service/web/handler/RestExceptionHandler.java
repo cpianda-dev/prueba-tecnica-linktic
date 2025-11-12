@@ -1,6 +1,7 @@
 package com.linktic.products_service.web.handler;
 
 import com.linktic.products_service.web.dto.jsonapi.JsonApiError;
+import com.linktic.products_service.web.dto.jsonapi.JsonApiErrorResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -17,16 +18,22 @@ import java.util.NoSuchElementException;
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private ResponseEntity<Object> jsonApiError(HttpStatus status, String title, String detail){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, "application/vnd.api+json");
+        return new ResponseEntity<>(
+                new JsonApiErrorResponse(List.of(new JsonApiError(String.valueOf(status.value()), title, detail))),
+                headers, status);
+    }
+
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<Object> handleNotFound(NoSuchElementException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(List.of(new JsonApiError("404", "Not Found", ex.getMessage())));
+        return jsonApiError(HttpStatus.NOT_FOUND, "Not Found", ex.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleBadRequest(IllegalArgumentException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(List.of(new JsonApiError("400", "Bad Request", ex.getMessage())));
+        return jsonApiError(HttpStatus.BAD_REQUEST, "Bad Request", ex.getMessage());
     }
 
     @Override
@@ -37,7 +44,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         String msg = ex.getBindingResult().getFieldErrors().stream()
                 .map(err -> err.getField() + ": " + err.getDefaultMessage())
                 .findFirst().orElse("Validation error");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(List.of(new JsonApiError("400", "Validation Error", msg)));
+        return jsonApiError(HttpStatus.BAD_REQUEST, "Validation Error", msg);
     }
 }

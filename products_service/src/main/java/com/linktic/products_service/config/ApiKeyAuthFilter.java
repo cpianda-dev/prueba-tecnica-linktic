@@ -53,9 +53,8 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
         }
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setContentType("application/json");
-        response.getWriter().write(
-                "[{\"status\":\"401\",\"title\":\"Unauthorized\",\"detail\":\"Invalid API Key\"}]"
-        );
+        response.setContentType("application/vnd.api+json");
+        response.getWriter().write("{\"errors\":[{\"status\":\"401\",\"title\":\"Unauthorized\"," +
+                "\"detail\":\"Invalid API Key\"}]}");
     }
 }

@@ -33,3 +33,8 @@ services:
       DB_USER: postgres
       DB_PASS: postgres
       PRODUCTS_API_KEY: dev-products-key
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8081/actuator/health" ]
+      interval: 10s
+      timeout: 3s
+      retries: 10

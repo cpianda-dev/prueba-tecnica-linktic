@@ -49,5 +49,6 @@ class ApiKeyAuthFilterTest {
 
         assertThat(res.getStatus()).isEqualTo(401);
         assertThat(res.getContentAsString()).contains("Invalid API Key");
+        assertThat(res.getContentType()).isEqualTo("application/vnd.api+json");
     }
 }
