@@ -18,17 +18,18 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDto {
-    private Long id;
+
     @NotBlank
     private String name;
+
     @NotNull
     @DecimalMin("0.01")
     private BigDecimal price;
 
-    public static ProductDto from(Product p) {
-        ProductDto a = new ProductDto();
-        a.setName(p.getName());
-        a.setPrice(p.getPrice());
-        return a;
+    public static ProductDto from(Product product) {
+        ProductDto model = new ProductDto();
+        model.setName(product.getName());
+        model.setPrice(product.getPrice());
+        return model;
     }
 }

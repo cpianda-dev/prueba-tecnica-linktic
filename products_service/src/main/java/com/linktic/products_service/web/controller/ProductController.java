@@ -39,9 +39,9 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<JsonApiResponse<ProductDto>> get(@PathVariable Long id) {
-        Product p = service.get(id);
+        Product product = service.get(id);
         JsonApiResponse<ProductDto> body = new JsonApiResponse<>();
-        body.setData(new JsonApiData<>(TYPE, String.valueOf(p.getId()), ProductDto.from(p)));
+        body.setData(new JsonApiData<>(TYPE, String.valueOf(product.getId()), ProductDto.from(product)));
         return ResponseEntity.ok(body);
     }
 
@@ -59,11 +59,13 @@ public class ProductController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) { service.delete(id); }
 
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<JsonApiListResponse<ProductDto>> list() {
         List<Product> list = service.list();
         List<JsonApiData<ProductDto>> data = list.stream()
-                .map(p -> new JsonApiData<>(TYPE, String.valueOf(p.getId()), ProductDto.from(p)))
+                .map(product -> new JsonApiData<>(TYPE,
+                        String.valueOf(product.getId()),
+                        ProductDto.from(product)))
                 .toList();
 
         JsonApiListResponse<ProductDto> body = new JsonApiListResponse<>();
@@ -78,18 +80,20 @@ public class ProductController {
             @RequestParam(name = "pageSize", defaultValue = "10") @Min(1) int pageSize) {
         Page<Product> page = service.paginatedList(pageNumber, pageSize);
         List<JsonApiData<ProductDto>> data = page.getContent().stream()
-                .map(p -> new JsonApiData<>(TYPE, String.valueOf(p.getId()), ProductDto.from(p)))
+                .map(product -> new JsonApiData<>(TYPE,
+                        String.valueOf(product.getId()),
+                        ProductDto.from(product)))
                 .toList();
 
         JsonApiListResponse<ProductDto> body = new JsonApiListResponse<>();
         body.setData(data);
 
         JsonApiLinks links = new JsonApiLinks();
-        links.setSelf("/products?page[number]=" + pageNumber + "&page[size]=" + pageSize);
-        links.setFirst("/products?page[number]=1&page[size]=" + page.getSize());
-        links.setLast("/products?page[number]=" + Math.max(page.getTotalPages(),1) + "&page[size]=" + page.getSize());
-        if (page.hasNext()) links.setNext("/products?page[number]=" + (pageNumber + 1) + "&page[size]=" + page.getSize());
-        if (page.hasPrevious()) links.setPrev("/products?page[number]=" + (pageNumber - 1) + "&page[size]=" + page.getSize());
+        links.setSelf("/products/paginated?pageNumber=" + pageNumber + "&pageSize=" + pageSize);
+        links.setFirst("/products/paginated?pageNumber=1&pageSize=" + page.getSize());
+        links.setLast("/products/paginated?pageNumber=" + Math.max(page.getTotalPages(),1) + "&pageSize=" + page.getSize());
+        if (page.hasNext()) links.setNext("/products?pageNumber=" + (pageNumber + 1) + "&pageSize=" + page.getSize());
+        if (page.hasPrevious()) links.setPrev("/products/paginated?pageNumber=" + (pageNumber - 1) + "&pageSize=" + page.getSize());
         body.setLinks(links);
 
         JsonApiMeta meta = new JsonApiMeta();

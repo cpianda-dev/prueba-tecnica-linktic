@@ -1,5 +1,8 @@
 package com.linktic.products_service.web.dto.jsonapi;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class JsonApiLinks {
     private String self;
     private String first;
