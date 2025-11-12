@@ -1,5 +1,5 @@
 HELP.md
-.gradle
+.gradle/
 build/
 target/
 out/
@@ -37,10 +37,10 @@ bin/
 
 ### NetBeans ###
 /nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+.nbbuild/
+dist/
+nbdist/
+.nb-gradle/
 
 ### VS Code ###
 .vscode/

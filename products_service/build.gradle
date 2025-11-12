@@ -57,3 +57,22 @@ jacocoTestReport {
 	dependsOn test
 	reports { xml.required = true; html.required = true }
 }
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.80
+            }
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+check.dependsOn jacocoTestCoverageVerification
