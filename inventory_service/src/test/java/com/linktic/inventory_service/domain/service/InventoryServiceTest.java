@@ -40,8 +40,8 @@ class InventoryServiceTest {
     void setUp() {
         repository = mock(InventoryRepository.class);
         productsClient = mock(ProductsClient.class);
-        service = new InventoryService(repository);
-        serviceWithClient = new InventoryService(repository, productsClient);
+        service = new InventoryService(repository, Optional.empty());
+        serviceWithClient = new InventoryService(repository, Optional.of(productsClient));
     }
 
     @Test

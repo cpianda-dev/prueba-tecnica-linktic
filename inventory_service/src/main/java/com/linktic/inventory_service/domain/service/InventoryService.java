@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -25,16 +26,10 @@ public class InventoryService {
     private final ProductsClient productsClient;
     private final boolean validateProducts;
 
-    public InventoryService(InventoryRepository repository, ProductsClient productsClient) {
+    public InventoryService(InventoryRepository repository, Optional<ProductsClient> productsClientOpt) {
         this.repository = repository;
-        this.productsClient = productsClient;
-        this.validateProducts = (productsClient != null);
-    }
-
-    public InventoryService(InventoryRepository repository) {
-        this.repository = repository;
-        this.productsClient = null;
-        this.validateProducts = false;
+        this.productsClient = productsClientOpt.orElse(null);
+        this.validateProducts = productsClientOpt.isPresent();
     }
 
     public Inventory create(Long productId, Integer quantity) {
