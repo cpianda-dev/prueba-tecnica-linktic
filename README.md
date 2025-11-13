@@ -243,7 +243,19 @@ curl -H "X-API-Key: dev-inventory-key"   "http://localhost:8082/inventories/prod
 - `GET /inventories/list`
 - `GET /inventories/paginated?pageNumber=1&pageSize=10`
 
-**Swagger**: <http://localhost:8082/swagger-ui/index.html>  
+### 📘 Documentación de la API (Swagger / OpenAPI)
+
+### products_service
+- <http://localhost:8081/swagger-ui/index.html>
+- [JSON OpenAPI](docs/products_service/openapi.json)
+- [Swagger UI](docs/products_service/index.html) (interactivo offline)
+
+### inventory_service
+- <http://localhost:8082/swagger-ui/index.html>
+- [JSON OpenAPI](docs/inventory_service/openapi.json)
+- [Swagger UI](docs/inventory_service/index.html) (interactivo offline)
+
+
 **Health**: <http://localhost:8082/actuator/health>
 
 ---
