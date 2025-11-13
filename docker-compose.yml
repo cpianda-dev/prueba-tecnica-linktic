@@ -1,0 +1,77 @@
+services:
+  products-postgres:
+    image: postgres:15
+    container_name: products-postgres-1
+    environment:
+      POSTGRES_DB: products
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./products_service/data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  inventory-postgres:
+    image: postgres:15
+    container_name: inventory-postgres-1
+    environment:
+      POSTGRES_DB: inventory
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./inventory_service/data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  products-service:
+    build: ./products_service
+    container_name: products-service-1
+    depends_on:
+      products-postgres:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    environment:
+      DB_URL: jdbc:postgresql://products-postgres:5432/products
+      DB_USER: postgres
+      DB_PASS: postgres
+      PRODUCTS_API_KEY: dev-products-key
+    healthcheck:
+      test: ["CMD","curl","-f","http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  inventory-service:
+    build: ./inventory_service
+    container_name: inventory-service-1
+    depends_on:
+      inventory-postgres:
+        condition: service_healthy
+    ports:
+      - "8082:8082"
+      - "5006:5006"
+    environment:
+      DB_URL: jdbc:postgresql://inventory-postgres:5432/inventory
+      DB_USER: postgres
+      DB_PASS: postgres
+      INVENTORY_API_KEY: dev-inventory-key
+      # importante para resolver el Products desde dentro de la red del compose:
+      INVENTORY_PRODUCTS_BASE_URL: http://products-service:8081
+      INVENTORY_PRODUCTS_API_KEY_HEADER: X-API-Key
+      INVENTORY_PRODUCTS_API_KEY_VALUE: dev-products-key
+    healthcheck:
+      test: ["CMD","curl","-f","http://localhost:8082/actuator/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
