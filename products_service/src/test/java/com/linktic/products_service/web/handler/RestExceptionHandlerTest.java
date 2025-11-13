@@ -53,7 +53,6 @@ class RestExceptionHandlerTest {
 
     @Test
     void handleMethodArgumentNotValid_returns400WithFirstFieldMessage() throws NoSuchMethodException {
-        // Simula un error de validación en ProductDto.name
         ProductDto target = new ProductDto();
         BeanPropertyBindingResult br = new BeanPropertyBindingResult(target, "product");
         br.addError(new FieldError("product", "name", "must not be blank"));
