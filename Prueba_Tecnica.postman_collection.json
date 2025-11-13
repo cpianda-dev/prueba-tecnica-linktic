@@ -1,0 +1,584 @@
+{
+	"info": {
+		"_postman_id": "08c4a902-e13d-4b9b-b3fa-21ed5e6172f4",
+		"name": "Prueba_Tecnica",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42552258"
+	},
+	"item": [
+		{
+			"name": "Products-Service",
+			"item": [
+				{
+					"name": "health",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseURLProducts}}/actuator/health",
+							"host": [
+								"{{baseURLProducts}}"
+							],
+							"path": [
+								"actuator",
+								"health"
+							]
+						},
+						"description": "Generated from cURL: curl -X GET \"http://localhost:8081/actuator/health\" \\\r\n  -H \"Accept: application/json\""
+					},
+					"response": []
+				},
+				{
+					"name": "create products",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "X-API-Key",
+								"value": "dev-products-key"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\":{\r\n        \"type\":\"products\",\r\n        \"attributes\":{\r\n            \"name\":\"Keyboard Pro\",\r\n            \"price\":199.99\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURLProducts}}/products",
+							"host": [
+								"{{baseURLProducts}}"
+							],
+							"path": [
+								"products"
+							]
+						},
+						"description": "Generated from cURL: curl -X POST \"http://localhost:8081/products\" \\\r\n  -H \"Accept: application/vnd.api+json\" \\\r\n  -H \"Content-Type: application/vnd.api+json\" \\\r\n  -H \"X-API-Key: dev-products-key\" \\\r\n  -d \"{\\\"data\\\":{\\\"type\\\":\\\"products\\\",\\\"attributes\\\":{\\\"name\\\":\\\"Keyboard Pro\\\",\\\"price\\\":199.99}}}\"\r\n"
+					},
+					"response": []
+				},
+				{
+					"name": "getByID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "X-API-Key",
+								"value": "dev-products-key"
+							}
+						],
+						"url": {
+							"raw": "{{baseURLProducts}}/products/2",
+							"host": [
+								"{{baseURLProducts}}"
+							],
+							"path": [
+								"products",
+								"2"
+							]
+						},
+						"description": "Generated from cURL: curl -X GET \"http://localhost:8081/products/1\" \\\r\n  -H \"Accept: application/vnd.api+json\" \\\r\n  -H \"X-API-Key: dev-products-key\""
+					},
+					"response": []
+				},
+				{
+					"name": "list products",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "X-API-Key",
+								"value": "dev-products-key"
+							}
+						],
+						"url": {
+							"raw": "{{baseURLProducts}}/products/list",
+							"host": [
+								"{{baseURLProducts}}"
+							],
+							"path": [
+								"products",
+								"list"
+							]
+						},
+						"description": "Generated from cURL: curl -X GET \"http://localhost:8081/products\" \\\r\n  -H \"Accept: application/vnd.api+json\" \\\r\n  -H \"X-API-Key: dev-products-key\""
+					},
+					"response": []
+				},
+				{
+					"name": "list paginated products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "X-API-Key",
+								"value": "dev-products-key"
+							}
+						],
+						"url": {
+							"raw": "{{baseURLProducts}}/products/paginated?pageNumber=1&pageSize=5",
+							"host": [
+								"{{baseURLProducts}}"
+							],
+							"path": [
+								"products",
+								"paginated"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "5"
+								}
+							]
+						},
+						"description": "Generated from cURL: curl -X GET \"http://localhost:8081/products/paginated?page[number]=1&page[size]=5\" \\\r\n  -H \"Accept: application/vnd.api+json\" \\\r\n  -H \"X-API-Key: dev-products-key\""
+					},
+					"response": []
+				},
+				{
+					"name": "update product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "X-API-Key",
+								"value": "dev-products-key"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\": {\r\n        \"type\": \"products\",\r\n        \"id\": \"2\",\r\n        \"attributes\": {\r\n            \"name\": \"Keyboard Pro 1\",\r\n            \"price\": 219.99\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURLProducts}}/products/2",
+							"host": [
+								"{{baseURLProducts}}"
+							],
+							"path": [
+								"products",
+								"2"
+							]
+						},
+						"description": "Generated from cURL: curl -X PATCH \"http://localhost:8081/products/1\" \\\r\n  -H \"Accept: application/vnd.api+json\" \\\r\n  -H \"Content-Type: application/vnd.api+json\" \\\r\n  -H \"X-API-Key: dev-products-key\" \\\r\n  -d \"{\\\"data\\\":{\\\"type\\\":\\\"products\\\",\\\"id\\\":\\\"1\\\",\\\"attributes\\\":{\\\"name\\\":\\\"Keyboard Pro 2\\\",\\\"price\\\":219.99}}}\""
+					},
+					"response": []
+				},
+				{
+					"name": "delete product",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "X-API-Key",
+								"value": "dev-products-key"
+							}
+						],
+						"url": {
+							"raw": "{{baseURLProducts}}/products/2",
+							"host": [
+								"{{baseURLProducts}}"
+							],
+							"path": [
+								"products",
+								"2"
+							]
+						},
+						"description": "Generated from cURL: curl -X DELETE \"http://localhost:8081/products/1\" \\\r\n  -H \"Accept: application/vnd.api+json\" \\\r\n  -H \"X-API-Key: dev-products-key\""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Inventory-Service",
+			"item": [
+				{
+					"name": "health",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseURLInventory}}/actuator/health",
+							"host": [
+								"{{baseURLInventory}}"
+							],
+							"path": [
+								"actuator",
+								"health"
+							]
+						},
+						"description": "Generated from cURL: curl -X GET \"http://localhost:8081/actuator/health\" \\\r\n  -H \"Accept: application/json\""
+					},
+					"response": []
+				},
+				{
+					"name": "create stock",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "X-API-Key",
+								"value": "dev-inventory-key"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\": {\r\n        \"type\": \"inventories\",\r\n        \"attributes\": {\r\n            \"productId\": 100,\r\n            \"quantity\": 10\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURLInventory}}/inventories",
+							"host": [
+								"{{baseURLInventory}}"
+							],
+							"path": [
+								"inventories"
+							]
+						},
+						"description": "Generated from cURL: curl -X POST \"http://localhost:8081/products\" \\\r\n  -H \"Accept: application/vnd.api+json\" \\\r\n  -H \"Content-Type: application/vnd.api+json\" \\\r\n  -H \"X-API-Key: dev-products-key\" \\\r\n  -d \"{\\\"data\\\":{\\\"type\\\":\\\"products\\\",\\\"attributes\\\":{\\\"name\\\":\\\"Keyboard Pro\\\",\\\"price\\\":199.99}}}\"\r\n"
+					},
+					"response": []
+				},
+				{
+					"name": "getByID stock",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "X-API-Key",
+								"value": "dev-inventory-key"
+							}
+						],
+						"url": {
+							"raw": "{{baseURLInventory}}/inventories/1",
+							"host": [
+								"{{baseURLInventory}}"
+							],
+							"path": [
+								"inventories",
+								"1"
+							]
+						},
+						"description": "Generated from cURL: curl -X GET \"http://localhost:8081/products/1\" \\\r\n  -H \"Accept: application/vnd.api+json\" \\\r\n  -H \"X-API-Key: dev-products-key\""
+					},
+					"response": []
+				},
+				{
+					"name": "getByID product",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "X-API-Key",
+								"value": "dev-inventory-key"
+							}
+						],
+						"url": {
+							"raw": "{{baseURLInventory}}/inventories/product/2",
+							"host": [
+								"{{baseURLInventory}}"
+							],
+							"path": [
+								"inventories",
+								"product",
+								"2"
+							]
+						},
+						"description": "Generated from cURL: curl -X GET \"http://localhost:8081/products/1\" \\\r\n  -H \"Accept: application/vnd.api+json\" \\\r\n  -H \"X-API-Key: dev-products-key\""
+					},
+					"response": []
+				},
+				{
+					"name": "list stock",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "X-API-Key",
+								"value": "dev-inventory-key"
+							}
+						],
+						"url": {
+							"raw": "{{baseURLInventory}}/inventories/list",
+							"host": [
+								"{{baseURLInventory}}"
+							],
+							"path": [
+								"inventories",
+								"list"
+							]
+						},
+						"description": "Generated from cURL: curl -X GET \"http://localhost:8081/products\" \\\r\n  -H \"Accept: application/vnd.api+json\" \\\r\n  -H \"X-API-Key: dev-products-key\""
+					},
+					"response": []
+				},
+				{
+					"name": "list paginated stock",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "X-API-Key",
+								"value": "dev-inventory-key"
+							}
+						],
+						"url": {
+							"raw": "{{baseURLInventory}}/inventories/paginated?pageNumber=1&pageSize=5",
+							"host": [
+								"{{baseURLInventory}}"
+							],
+							"path": [
+								"inventories",
+								"paginated"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "5"
+								}
+							]
+						},
+						"description": "Generated from cURL: curl -X GET \"http://localhost:8081/products/paginated?page[number]=1&page[size]=5\" \\\r\n  -H \"Accept: application/vnd.api+json\" \\\r\n  -H \"X-API-Key: dev-products-key\""
+					},
+					"response": []
+				},
+				{
+					"name": "update stock",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "X-API-Key",
+								"value": "dev-inventory-key"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\": {\r\n        \"type\": \"inventories\",\r\n        \"attributes\": {\r\n            \"quantity\": 25\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURLInventory}}/inventories/1",
+							"host": [
+								"{{baseURLInventory}}"
+							],
+							"path": [
+								"inventories",
+								"1"
+							]
+						},
+						"description": "Generated from cURL: curl -X PATCH \"http://localhost:8081/products/1\" \\\r\n  -H \"Accept: application/vnd.api+json\" \\\r\n  -H \"Content-Type: application/vnd.api+json\" \\\r\n  -H \"X-API-Key: dev-products-key\" \\\r\n  -d \"{\\\"data\\\":{\\\"type\\\":\\\"products\\\",\\\"id\\\":\\\"1\\\",\\\"attributes\\\":{\\\"name\\\":\\\"Keyboard Pro 2\\\",\\\"price\\\":219.99}}}\""
+					},
+					"response": []
+				},
+				{
+					"name": "delete stock",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "X-API-Key",
+								"value": "dev-inventory-key"
+							}
+						],
+						"url": {
+							"raw": "{{baseURLInventory}}/inventories/1",
+							"host": [
+								"{{baseURLInventory}}"
+							],
+							"path": [
+								"inventories",
+								"1"
+							]
+						},
+						"description": "Generated from cURL: curl -X DELETE \"http://localhost:8081/products/1\" \\\r\n  -H \"Accept: application/vnd.api+json\" \\\r\n  -H \"X-API-Key: dev-products-key\""
+					},
+					"response": []
+				},
+				{
+					"name": "purchase",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json"
+							},
+							{
+								"key": "X-API-Key",
+								"value": "dev-inventory-key"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\": {\r\n        \"type\": \"inventories\",\r\n        \"attributes\": {\r\n            \"productId\": 2,\r\n            \"units\": 2\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURLInventory}}/inventories/purchase",
+							"host": [
+								"{{baseURLInventory}}"
+							],
+							"path": [
+								"inventories",
+								"purchase"
+							]
+						},
+						"description": "Generated from cURL: curl -X POST \"http://localhost:8081/products\" \\\r\n  -H \"Accept: application/vnd.api+json\" \\\r\n  -H \"Content-Type: application/vnd.api+json\" \\\r\n  -H \"X-API-Key: dev-products-key\" \\\r\n  -d \"{\\\"data\\\":{\\\"type\\\":\\\"products\\\",\\\"attributes\\\":{\\\"name\\\":\\\"Keyboard Pro\\\",\\\"price\\\":199.99}}}\"\r\n"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURLProducts",
+			"value": ""
+		},
+		{
+			"key": "baseURLInventory",
+			"value": ""
+		}
+	]
+}
