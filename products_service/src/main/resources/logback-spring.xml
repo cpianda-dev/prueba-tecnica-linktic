@@ -1,8 +1,27 @@
 <configuration>
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+    <springProperty name="APP_NAME" source="spring.application.name" defaultValue="products-service"/>
+    <springProperty name="ENV" source="spring.profiles.active" defaultValue="default"/>
+
+    <appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <timeZone>UTC</timeZone>
+            <customFields>{"app":"${APP_NAME}","env":"${ENV}"}</customFields>
+
+            <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                <rootCauseFirst>true</rootCauseFirst>
+                <maxDepthPerThrowable>30</maxDepthPerThrowable>
+                <maxLength>2048</maxLength>
+            </throwableConverter>
+        </encoder>
     </appender>
+
+    <logger name="org.apache.catalina" level="WARN"/>
+    <logger name="org.apache.coyote.http11" level="WARN"/>
+    <logger name="org.apache.tomcat" level="WARN"/>
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.hibernate.SQL" level="WARN"/>
+
     <root level="INFO">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="JSON"/>
     </root>
 </configuration>

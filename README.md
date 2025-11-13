@@ -26,6 +26,81 @@ flowchart LR
 - Cada servicio tiene su propia base de datos PostgreSQL.
 - Seguridad por **API Key** en ambos servicios.
 
+**Deployment (compose / redes / puertos):**:
+```mermaid
+flowchart LR
+  subgraph host[Host]
+    subgraph net[Docker network]
+      subgraph products[stack: products]
+        psvc[Products Service :8081]
+        pdb[(PostgreSQL :5432)]
+        psvc --- pdb
+      end
+      subgraph inventory[stack: inventory]
+        isvc[Inventory Service :8082]
+        idb[(PostgreSQL :5432)]
+        isvc --- idb
+      end
+      isvc -->|HTTP| psvc
+    end
+  end
+```
+
+**Arquitectura de integración Inventory–Products (flujo de llamadas):**:
+```mermaid
+flowchart LR
+  C["Client / Postman / Front"]
+  API["Inventory API (Controller)"]
+  SEC["ApiKeyAuthFilter"]
+  SVC["InventoryService"]
+  REPO["InventoryRepository (Adapter)"]
+  JPA["Spring Data JPA"]
+  DBI[("(PostgreSQL - inventory)")]
+  PC["ProductsClient (REST)"]
+  PS["Products Service (API)"]
+  DBP[("(PostgreSQL - products)")]
+
+  C -->|HTTP JSON:API| API -->|valida| SEC --> SVC
+  SVC --> REPO --> JPA --> DBI
+  SVC -->|getProductSummary| PC -->|HTTP| PS --> DBP
+```
+
+**Arquitectura de alto nivel (hexagonal) — Products & Inventory:**:
+```mermaid
+flowchart LR
+  C["Client / Postman / Front"]
+  API["Inventory API (Controller)"]
+  SEC["ApiKeyAuthFilter"]
+  SVC["InventoryService"]
+  REPO["InventoryRepository (Adapter)"]
+  JPA["Spring Data JPA"]
+  DBI[("(PostgreSQL - inventory)")]
+  PC["ProductsClient (REST)"]
+  PS["Products Service (API)"]
+  DBP[("(PostgreSQL - products)")]
+
+  C -->|HTTP JSON:API| API -->|valida| SEC --> SVC
+  SVC --> REPO --> JPA --> DBI
+  SVC -->|getProductSummary| PC -->|HTTP| PS --> DBP
+```
+---
+
+## Decisiones técnicas y justificaciones
+
+- JSON:API: contrato uniforme (data, errors, links, meta), facilita clientes y manejo de errores.
+
+- API Key: autenticación simple y suficiente para la prueba; en producción se evaluaría JWT/OAuth2.
+
+- PostgreSQL por servicio: independencia de esquema, escalabilidad y despliegue desacoplado; integraciones vía REST (no cross-DB).
+
+- Flyway: versionamiento del esquema reproducible en cualquier entorno.
+
+- Arquitectura hexagonal + Repository: dominio aislado de infraestructura (tests más simples, adaptadores intercambiables).
+
+- MapStruct: mapeo DTO↔entidades en compile-time (seguridad y rendimiento).
+
+- Logback JSON + Actuator: logs estructurados listos para ELK y health checks estándar.
+
 ---
 
 ## Cómo ejecutar todo con un único `docker-compose` (raíz)
