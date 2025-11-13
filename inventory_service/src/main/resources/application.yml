@@ -1,0 +1,40 @@
+server:
+  port: 8082
+  tomcat:
+    basedir: ${TOMCAT_BASEDIR:./.tomcat}
+spring:
+  application:
+    name: inventory-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/inventory}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASS:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+inventory:
+  products:
+    base-url: ${INVENTORY_PRODUCTS_BASE_URL:http://products-service:8081}
+    api-key:
+      header: ${INVENTORY_PRODUCTS_API_KEY_HEADER:X-API-Key}
+      value: ${INVENTORY_PRODUCTS_API_KEY_VALUE:dev-products-key}
+
+springdoc:
+  default-produces-media-type: application/vnd.api+json
+  default-consumes-media-type: application/vnd.api+json
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui/index.html
+    operationsSorter: alpha
+    tagsSorter: alpha

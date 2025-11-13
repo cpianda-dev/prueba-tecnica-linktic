@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: inventory_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: inventory
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  inventory-service:
+    build: .
+    container_name: inventory_service
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    ports:
+      - "8082:8082"
+      - "5006:5006"
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/inventory
+      DB_USER: postgres
+      DB_PASS: postgres
+      INVENTORY_API_KEY: dev-inventory-key
+      # OVERRIDES opcionales (no necesitas setearlos gracias a defaults en application.yml)
+      # INVENTORY_PRODUCTS_BASE_URL: http://products-service:8081
+      # INVENTORY_PRODUCTS_API_KEY_HEADER: X-API-Key
+      # INVENTORY_PRODUCTS_API_KEY_VALUE: dev-products-key
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8082/actuator/health" ]
+      interval: 10s
+      timeout: 3s
+      retries: 10

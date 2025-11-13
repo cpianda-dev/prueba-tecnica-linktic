@@ -13,12 +13,12 @@ Microservicio **Products** para gestionar productos de la aplicación.
 
 ```mermaid
 flowchart LR
-  Client[Client / Postman / Front] -->|HTTP JSON:API| API[Products API (Controller)]
-  API -->|valida| Security[ApiKeyAuthFilter]
-  API --> Service[ProductService]
-  Service --> Repo[ProductRepository (Adapter)]
-  Repo --> JPA[Spring Data JPA]
-  JPA --> DB[(PostgreSQL)]
+  client["Client / Postman / Front"] -->|HTTP JSON:API| api["Products API (Controller)"]
+  api -->|valida| sec["ApiKeyAuthFilter"]
+  api --> svc["ProductService"]
+  svc --> repo["ProductRepository (Adapter)"]
+  repo --> jpa["Spring Data JPA"]
+  jpa --> db[(PostgreSQL)]
 ```
 
 **Decisiones clave**
